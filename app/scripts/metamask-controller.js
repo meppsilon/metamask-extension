@@ -1047,6 +1047,11 @@ export default class MetamaskController extends EventEmitter {
         this.gasFeeController.getGasFeeEstimatesAndStartPolling,
         this.gasFeeController,
       ),
+
+      disconnectGasFeeEstimatePoller: nodeify(
+        this.gasFeeController.disconnectPoller,
+        this.gasFeeController,
+      ),
     };
   }
 
