@@ -14,7 +14,7 @@ import ListItem from '../../components/ui/list-item';
 // import classnames from 'classnames';
 
 const EnsNames = () => {
-  const [ensNames, setEnsNames] = useState({});
+  const [ensNames, setEnsNames] = useState([]);
   const [copied, setCopied] = useState(false);
   const identity = useSelector(getSelectedIdentity);
   const checksummedAddress = toChecksumHexAddress(identity);
@@ -63,12 +63,17 @@ const EnsNames = () => {
     const fetchWrapper = async () => {
       // code to run on component mount
       const names = await getAddressEnsNames();
-      setEnsNames({
-        registrations: names.data.accounts[0].registrations,
-        domains: names.data.domains,
+      const consolidatedNames = names.data.domains.map((domain) => {
+        const registration = names.data.accounts[0].registrations.find(
+          (r) => r.domain.name === domain.name,
+        );
+        return {
+          name: domain.name,
+          expiry: registration?.expiryDate,
+          url: `https://app.ens.domains/name/${domain.name}/details`,
+        };
       });
-      console.log(names.data.accounts[0].registrations);
-      console.log(names.data.domains);
+      setEnsNames(consolidatedNames);
     };
     fetchWrapper();
   }, []);
@@ -122,48 +127,51 @@ const EnsNames = () => {
               </div>
             </Tooltip>
           </div>
-          <ListItem
-            // className={classnames('asset-list-item', className)}
-            // data-testid={dataTestId}
-            title={
-              <button
-                className="asset-list-item__token-button"
-              // onClick={onClick}
-              // title={`${primary} ${tokenSymbol}`}
-              >
-                <h2>
-                  {/* <span className="asset-list-item__token-value">
+          {ensNames.map((nameObj) => (
+            <ListItem
+              // className={classnames('asset-list-item', className)}
+              // data-testid={dataTestId}
+              key={nameObj.name}
+              title={
+                <button
+                  className="asset-list-item__token-button"
+                // onClick={onClick}
+                // title={`${primary} ${tokenSymbol}`}
+                >
+                  <h2>
+                    {/* <span className="asset-list-item__token-value">
                     {primary}
                   </span>
                   <span className="asset-list-item__token-symbol">
                     {tokenSymbol}
                   </span> */}
-                  YOUR NAME!
-                </h2 >
-              </button >
-            }
-          // // subtitle={secondary ? <h3 title={secondary}>{secondary}</h3> : null}
-          // // onClick={onClick}
-          // // icon={
-          // //   <Identicon
-          // //     className={iconClassName}
-          // //     diameter={32}
-          // //     address={tokenAddress}
-          // //     image={tokenImage}
-          // //     alt={`${primary} ${tokenSymbol}`}
-          // //     imageBorder={identiconBorder}
-          // //   />
-          // }
-          // midContent={midContent}
-          // rightContent={
-          //   !isERC721 && (
-          //     <>
-          //       <i className="fas fa-chevron-right asset-list-item__chevron-right" />
-          //       {sendTokenButton}
-          //     </>
-          //   )
-          // }
-          />
+                    {`${nameObj.name} ${nameObj.expiry || 'Not Found'}`}
+                  </h2 >
+                </button >
+              }
+            // // subtitle={secondary ? <h3 title={secondary}>{secondary}</h3> : null}
+            // // onClick={onClick}
+            // // icon={
+            // //   <Identicon
+            // //     className={iconClassName}
+            // //     diameter={32}
+            // //     address={tokenAddress}
+            // //     image={tokenImage}
+            // //     alt={`${primary} ${tokenSymbol}`}
+            // //     imageBorder={identiconBorder}
+            // //   />
+            // }
+            // midContent={midContent}
+            // rightContent={
+            //   !isERC721 && (
+            //     <>
+            //       <i className="fas fa-chevron-right asset-list-item__chevron-right" />
+            //       {sendTokenButton}
+            //     </>
+            //   )
+            // }
+            />
+          ))}
         </div >
       </div >
     </div >
