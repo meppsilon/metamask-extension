@@ -116,9 +116,9 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
           history.push(ENS_ROUTE);
           onClose();
         }}
-        iconClassName="account-options-menu__ens-names"
+        iconClassName="fas fa-sliders-h"
       >
-        ENS Names
+        Manage my ENS
         {/* Localization later */}
       </MenuItem>
       <MenuItem

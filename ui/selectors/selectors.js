@@ -252,9 +252,10 @@ export function getSelectedAddress(state) {
 
 export function getSelectedIdentity(state) {
   const selectedAddress = getSelectedAddress(state);
-  const { identities } = state.metamask;
+  const { identities, ensResolutionsByAddress } = state.metamask;
+  const ens = ensResolutionsByAddress[selectedAddress];
 
-  return identities[selectedAddress];
+  return { ...identities[selectedAddress], ens };
 }
 
 export function getSelectedEns(state) {
