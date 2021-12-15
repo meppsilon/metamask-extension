@@ -7,6 +7,7 @@ import IdleTimer from 'react-idle-timer';
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
 import Swaps from '../swaps';
+import EnsNames from '../ens-names';
 import ConfirmTransaction from '../confirm-transaction';
 import Home from '../home';
 import Settings from '../settings';
@@ -57,6 +58,7 @@ import {
   INITIALIZE_ROUTE,
   ONBOARDING_ROUTE,
   ADD_COLLECTIBLE_ROUTE,
+  ENS_ROUTE,
 } from '../../helpers/constants/routes';
 
 import {
@@ -152,6 +154,7 @@ export default class Routes extends Component {
           component={SendTransactionScreen}
           exact
         />
+        <Authenticated path={ENS_ROUTE} component={EnsNames} />
         <Authenticated path={SWAPS_ROUTE} component={Swaps} />
         <Authenticated
           path={IMPORT_TOKEN_ROUTE}

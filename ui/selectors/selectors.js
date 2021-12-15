@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { mapValues } from 'lodash';
 import { addHexPrefix } from '../../app/scripts/lib/util';
 import {
   MAINNET_CHAIN_ID,
@@ -256,6 +257,12 @@ export function getSelectedIdentity(state) {
   return identities[selectedAddress];
 }
 
+export function getSelectedEns(state) {
+  const { ensResolutionsByAddress } = state.metamask;
+  const selectedAddress = getSelectedAddress(state);
+  return ensResolutionsByAddress[selectedAddress];
+}
+
 export function getNumberOfAccounts(state) {
   return Object.keys(state.metamask.accounts).length;
 }
@@ -270,11 +277,17 @@ export function getMetaMaskKeyrings(state) {
 }
 
 export function getMetaMaskIdentities(state) {
-  return state.metamask.identities;
+  return mapValues(state.metamask.identities, (id) => ({
+    ...id,
+    ens: state.metamask.ensResolutionsByAddress[id.address],
+  }));
 }
 
 export function getMetaMaskAccountsRaw(state) {
-  return state.metamask.accounts;
+  return mapValues(state.metamask.accounts, (acc) => ({
+    ...acc,
+    ens: state.metamask.ensResolutionsByAddress[acc.address],
+  }));
 }
 
 export function getMetaMaskCachedBalances(state) {

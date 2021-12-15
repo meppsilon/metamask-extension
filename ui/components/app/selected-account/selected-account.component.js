@@ -19,10 +19,14 @@ class SelectedAccount extends Component {
 
   static propTypes = {
     selectedIdentity: PropTypes.object.isRequired,
+    tryReverseResolveAddress: PropTypes.func.isRequired,
+    selectedEns: PropTypes.string.isRequired,
   };
 
   componentDidMount() {
     this.copyTimeout = null;
+    const { tryReverseResolveAddress, selectedIdentity } = this.props;
+    tryReverseResolveAddress(selectedIdentity.address);
   }
 
   componentWillUnmount() {
@@ -34,7 +38,7 @@ class SelectedAccount extends Component {
 
   render() {
     const { t } = this.context;
-    const { selectedIdentity } = this.props;
+    const { selectedIdentity, selectedEns } = this.props;
     const checksummedAddress = toChecksumHexAddress(selectedIdentity.address);
 
     return (
@@ -58,7 +62,7 @@ class SelectedAccount extends Component {
             }}
           >
             <div className="selected-account__name">
-              {selectedIdentity.name}
+              {selectedEns || selectedIdentity.name}
             </div>
             <div className="selected-account__address">
               {shortenAddress(checksummedAddress)}

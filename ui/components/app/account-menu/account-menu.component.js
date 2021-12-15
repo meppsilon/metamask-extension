@@ -72,6 +72,7 @@ export default class AccountMenu extends Component {
     toggleAccountMenu: PropTypes.func,
     addressConnectedDomainMap: PropTypes.object,
     originOfCurrentTab: PropTypes.string,
+    tryReverseResolveAddress: PropTypes.func,
   };
 
   accountsRef;
@@ -92,6 +93,11 @@ export default class AccountMenu extends Component {
       { name: 'address', weight: 0.5 },
     ],
   });
+
+  componentDidMount() {
+    const { tryReverseResolveAddress, selectedAddress } = this.props;
+    tryReverseResolveAddress(selectedAddress);
+  }
 
   componentDidUpdate(prevProps, prevState) {
     const { isAccountMenuOpen: prevIsAccountMenuOpen } = prevProps;
@@ -202,7 +208,9 @@ export default class AccountMenu extends Component {
           </div>
           <Identicon address={identity.address} diameter={24} />
           <div className="account-menu__account-info">
-            <div className="account-menu__name">{identity.name || ''}</div>
+            <div className="account-menu__name">
+              {identity.ens || identity.name || ''}
+            </div>
             <UserPreferencedCurrencyDisplay
               className="account-menu__balance"
               value={identity.balance}

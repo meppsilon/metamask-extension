@@ -43,16 +43,21 @@ export default class EnsController {
   }
 
   reverseResolveAddress(address) {
+    console.log(`address`, address);
     return this._reverseResolveAddress(toChecksumHexAddress(address));
   }
 
   async _reverseResolveAddress(address) {
     if (!this._ens) {
+      console.log('not ens');
       return undefined;
     }
 
+    console.log('reverse resolve', address);
+
     const state = this.store.getState();
     if (state.ensResolutionsByAddress[address]) {
+      console.log('has state');
       return state.ensResolutionsByAddress[address];
     }
 
@@ -60,17 +65,21 @@ export default class EnsController {
     try {
       domain = await this._ens.reverse(address);
     } catch (error) {
+      console.log('domain error', error);
       log.debug(error);
       return undefined;
     }
+    console.log(`domain`, domain);
 
     let registeredAddress;
     try {
       registeredAddress = await this._ens.lookup(domain);
     } catch (error) {
+      console.log('registered address error');
       log.debug(error);
       return undefined;
     }
+    console.log(`registeredAddress`, registeredAddress);
 
     if (
       registeredAddress === ZERO_ADDRESS ||
@@ -83,7 +92,10 @@ export default class EnsController {
       return undefined;
     }
 
-    this._updateResolutionsByAddress(address, punycode.toASCII(domain));
+    this._updateResolutionsByAddress(
+      address.toLowerCase(),
+      punycode.toASCII(domain),
+    );
     return domain;
   }
 

@@ -6,6 +6,7 @@ import {
   showAccountDetail,
   lockMetamask,
   hideWarning,
+  tryReverseResolveAddress,
 } from '../../../store/actions';
 import {
   getAddressConnectedDomainMap,
@@ -23,19 +24,21 @@ const SHOW_SEARCH_ACCOUNTS_MIN_COUNT = 5;
 
 function mapStateToProps(state) {
   const {
-    metamask: { isAccountMenuOpen },
+    metamask: { ensResolutionsByAddress, isAccountMenuOpen },
   } = state;
   const accounts = getMetaMaskAccountsOrdered(state);
   const origin = getOriginOfCurrentTab(state);
   const selectedAddress = getSelectedAddress(state);
+  const ensResolutionSelectedAddress = ensResolutionsByAddress[selectedAddress];
 
   return {
-    isAccountMenuOpen,
+    accounts,
     addressConnectedDomainMap: getAddressConnectedDomainMap(state),
+    ensResolutionSelectedAddress,
+    isAccountMenuOpen,
+    keyrings: getMetaMaskKeyrings(state),
     originOfCurrentTab: origin,
     selectedAddress,
-    keyrings: getMetaMaskKeyrings(state),
-    accounts,
     shouldShowAccountsSearch: accounts.length >= SHOW_SEARCH_ACCOUNTS_MIN_COUNT,
   };
 }
@@ -52,6 +55,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(hideWarning());
       dispatch(toggleAccountMenu());
     },
+    tryReverseResolveAddress,
   };
 }
 

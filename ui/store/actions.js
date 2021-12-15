@@ -216,8 +216,11 @@ export function requestRevealSeedWords(password) {
 
 export function tryReverseResolveAddress(address) {
   return () => {
+    console.log('try reverse resolve address', address);
     return new Promise((resolve) => {
+      console.log('inside reverse resolve');
       background.tryReverseResolveAddress(address, (err) => {
+        console.log('after reverse resolve', address);
         if (err) {
           log.error(err);
         }

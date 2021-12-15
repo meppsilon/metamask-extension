@@ -4,6 +4,7 @@ import log from 'loglevel';
 import networkMap from 'ethereum-ens-network-map';
 import { isConfusing } from 'unicode-confusables';
 import { isHexString } from 'ethereumjs-util';
+// import fetchWithCache from '../../helpers/utils/fetch-with-cache';
 
 import { getCurrentChainId } from '../selectors';
 import {
@@ -36,6 +37,9 @@ const initialState = {
   error: null,
   warning: null,
   network: null,
+  domainsLoading: false,
+  domains: [],
+  domainsError: null,
 };
 
 export const ensInitialState = initialState;
@@ -107,6 +111,20 @@ const slice = createSlice({
       state.warning = null;
       state.error = null;
     },
+    fetchEnsDomainsLoading: (state) => {
+      state.domainsLoading = true;
+      state.domainsError = false;
+    },
+    fetchEnsDomainsSuccess: (state, action) => {
+      state.domainsLoading = false;
+      state.domainsError = false;
+      state.domains = action.payload;
+    },
+    fetchEnsDomainsError: (state, action) => {
+      state.domainsLoading = false;
+      state.domainsError = action.payload;
+      state.domains = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(CHAIN_CHANGED, (state, action) => {
@@ -127,6 +145,9 @@ const {
   enableEnsLookup,
   ensNotSupported,
   resetEnsResolution,
+  // fetchEnsDomainsLoading,
+  // fetchEnsDomainsSuccess,
+  // fetchEnsDomainsError,
 } = actions;
 export { resetEnsResolution };
 
@@ -186,6 +207,21 @@ export function lookupEnsName(ensName) {
     }
   };
 }
+
+// export function fetchEnsDomains(address) {
+//   return async (dispatch) => {
+//     dispatch(fetchEnsDomainsLoading());
+//     try {
+//       const response = await fetchWithCache(
+//         'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
+//       );
+//       console.log('response', response);
+//     } catch (e) {
+//       console.error('ens domains error', e);
+//       dispatch(fetchEnsDomainsError(e.message));
+//     }
+//   };
+// }
 
 export function getEnsResolution(state) {
   return state[name].resolution;

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAccountLink } from '@metamask/etherscan-link';
 
 import { showModal } from '../../../store/actions';
-import { CONNECTED_ROUTE } from '../../../helpers/constants/routes';
+import { CONNECTED_ROUTE, ENS_ROUTE } from '../../../helpers/constants/routes';
 import { getURLHostName } from '../../../helpers/utils/util';
 import { Menu, MenuItem } from '../../ui/menu';
 import {
@@ -110,6 +110,17 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
           {t('expandView')}
         </MenuItem>
       )}
+      <MenuItem
+        data-testid="account-options-menu__ens-names"
+        onClick={() => {
+          history.push(ENS_ROUTE);
+          onClose();
+        }}
+        iconClassName="account-options-menu__ens-names"
+      >
+        ENS Names
+        {/* Localization later */}
+      </MenuItem>
       <MenuItem
         data-testid="account-options-menu__account-details"
         onClick={() => {
