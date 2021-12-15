@@ -20,6 +20,10 @@ const EnsNames = () => {
   const checksummedAddress = toChecksumHexAddress(identity);
   const t = useI18nContext();
 
+  const onClick = (url) => {
+    window.open(url);
+  };
+
   // funtion to fetch from subgraph the list of names
   const getAddressEnsNames = async () => {
     const response = await window.fetch(
@@ -129,47 +133,27 @@ const EnsNames = () => {
           </div>
           {ensNames.map((nameObj) => (
             <ListItem
-              // className={classnames('asset-list-item', className)}
-              // data-testid={dataTestId}
+              className="asset-list-item"
+              data-testid={nameObj.name}
               key={nameObj.name}
               title={
-                <button
-                  className="asset-list-item__token-button"
-                  // onClick={onClick}
-                  // title={`${primary} ${tokenSymbol}`}
-                >
+                <div className="asset-list-item__token-button">
                   <h2>
-                    {/* <span className="asset-list-item__token-value">
-                    {primary}
-                  </span>
-                  <span className="asset-list-item__token-symbol">
-                    {tokenSymbol}
-                  </span> */}
-                    {`${nameObj.name} ${nameObj.expiry || 'Not Found'}`}
+                    <span className="asset-list-item__token-value">
+                      {nameObj.name}
+                    </span>
+                    <span className="asset-list-item__token-symbol">
+                      {nameObj.expiry || 'Not Found'}
+                    </span>
                   </h2>
-                </button>
+                </div>
               }
-              // // subtitle={secondary ? <h3 title={secondary}>{secondary}</h3> : null}
-              // // onClick={onClick}
-              // // icon={
-              // //   <Identicon
-              // //     className={iconClassName}
-              // //     diameter={32}
-              // //     address={tokenAddress}
-              // //     image={tokenImage}
-              // //     alt={`${primary} ${tokenSymbol}`}
-              // //     imageBorder={identiconBorder}
-              // //   />
-              // }
-              // midContent={midContent}
-              // rightContent={
-              //   !isERC721 && (
-              //     <>
-              //       <i className="fas fa-chevron-right asset-list-item__chevron-right" />
-              //       {sendTokenButton}
-              //     </>
-              //   )
-              // }
+              onClick={() => onClick(nameObj.url)}
+              rightContent={
+                <>
+                  <i className="fas fa-chevron-right asset-list-item__chevron-right" />
+                </>
+              }
             />
           ))}
         </div>
