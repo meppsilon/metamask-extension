@@ -135,8 +135,8 @@ const EnsNames = () => {
               title={
                 <button
                   className="asset-list-item__token-button"
-                // onClick={onClick}
-                // title={`${primary} ${tokenSymbol}`}
+                  // onClick={onClick}
+                  // title={`${primary} ${tokenSymbol}`}
                 >
                   <h2>
                     {/* <span className="asset-list-item__token-value">
@@ -146,35 +146,35 @@ const EnsNames = () => {
                     {tokenSymbol}
                   </span> */}
                     {`${nameObj.name} ${nameObj.expiry || 'Not Found'}`}
-                  </h2 >
-                </button >
+                  </h2>
+                </button>
               }
-            // // subtitle={secondary ? <h3 title={secondary}>{secondary}</h3> : null}
-            // // onClick={onClick}
-            // // icon={
-            // //   <Identicon
-            // //     className={iconClassName}
-            // //     diameter={32}
-            // //     address={tokenAddress}
-            // //     image={tokenImage}
-            // //     alt={`${primary} ${tokenSymbol}`}
-            // //     imageBorder={identiconBorder}
-            // //   />
-            // }
-            // midContent={midContent}
-            // rightContent={
-            //   !isERC721 && (
-            //     <>
-            //       <i className="fas fa-chevron-right asset-list-item__chevron-right" />
-            //       {sendTokenButton}
-            //     </>
-            //   )
-            // }
+              // // subtitle={secondary ? <h3 title={secondary}>{secondary}</h3> : null}
+              // // onClick={onClick}
+              // // icon={
+              // //   <Identicon
+              // //     className={iconClassName}
+              // //     diameter={32}
+              // //     address={tokenAddress}
+              // //     image={tokenImage}
+              // //     alt={`${primary} ${tokenSymbol}`}
+              // //     imageBorder={identiconBorder}
+              // //   />
+              // }
+              // midContent={midContent}
+              // rightContent={
+              //   !isERC721 && (
+              //     <>
+              //       <i className="fas fa-chevron-right asset-list-item__chevron-right" />
+              //       {sendTokenButton}
+              //     </>
+              //   )
+              // }
             />
           ))}
-        </div >
-      </div >
-    </div >
+        </div>
+      </div>
+    </div>
   );
 };
 
