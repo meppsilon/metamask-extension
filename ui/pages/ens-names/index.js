@@ -149,7 +149,12 @@ const EnsNames = () => {
                   <div className="asset-list-item__token-value">
                     {nameObj.name}
                   </div>
-                  <div className="asset-list-item__token-symbol">
+                  <div
+                    className="asset-list-item__token-symbol"
+                    style={{
+                      color: nameObj.name === 'plumbus.eth' ? 'red' : '',
+                    }}
+                  >
                     {nameObj.expiry && `Expires: ${nameObj.expiry}`}
                   </div>
                 </div>
