@@ -19,9 +19,8 @@ import AssetNavigation from './asset-navigation';
 import AssetOptions from './asset-options';
 
 export default function NativeAsset({ nativeCurrency }) {
-  const selectedAccountName = useSelector(
-    (state) => getSelectedIdentity(state).name,
-  );
+  const selectedIdentity = useSelector(getSelectedIdentity);
+  const selectedAccountName = selectedIdentity.ens || selectedIdentity.name;
   const dispatch = useDispatch();
 
   const chainId = useSelector(getCurrentChainId);
