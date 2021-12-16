@@ -117,7 +117,7 @@ const EnsNames = () => {
                 marginBottom: '20px',
               }}
             >
-              {identity.ens || identity.name || ''}
+              {selectedAccountName}
             </div>
             <Tooltip
               wrapperClassName="selected-account__tooltip-wrapper"
@@ -125,7 +125,7 @@ const EnsNames = () => {
               title={copied ? t('copiedExclamation') : t('copyToClipboard')}
             >
               <div
-                style={{ textAlign: 'center' }}
+                style={{ textAlign: 'center', cursor: 'pointer' }}
                 onClick={() => {
                   setCopied(true);
                   setTimeout(() => setCopied(false), SECOND * 3);
@@ -145,18 +145,13 @@ const EnsNames = () => {
               data-testid={nameObj.name}
               key={nameObj.name}
               title={
-                <div className="asset-list-item__token-button">
-                  <h2>
-                    <span className="asset-list-item__token-value">
-                      {nameObj.name}
-                    </span>
-                    <span
-                      className="asset-list-item__token-symbol"
-                      style={{ paddingLeft: '12px' }}
-                    >
-                      {nameObj.expiry && `Expires: ${nameObj.expiry}`}
-                    </span>
-                  </h2>
+                <div>
+                  <div className="asset-list-item__token-value">
+                    {nameObj.name}
+                  </div>
+                  <div className="asset-list-item__token-symbol">
+                    {nameObj.expiry && `Expires: ${nameObj.expiry}`}
+                  </div>
                 </div>
               }
               onClick={() => onClick(nameObj.url)}
