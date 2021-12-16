@@ -1,63 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import copyToClipboard from 'copy-to-clipboard';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { shortenAddress } from '../../helpers/utils/util';
 import { getSelectedIdentity } from '../../selectors';
 import CopyIcon from '../../components/ui/icon/copy-icon.component';
 import Tooltip from '../../components/ui/tooltip';
+import {
+  fetchEnsDomainsByAddress,
+  getEnsDomainsByAddress,
+} from '../../ducks/ens';
 import { toChecksumHexAddress } from '../../../shared/modules/hexstring-utils';
 import { SECOND } from '../../../shared/constants/time';
 import { useI18nContext } from '../../hooks/useI18nContext';
-// import MenuBar from '../../components/app/menu-bar';
-// import { EthOverview } from '../../components/app/wallet-overview';
 import ListItem from '../../components/ui/list-item';
-// import classnames from 'classnames';
 import AssetNavigation from '../asset/components/asset-navigation';
 import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 
-// funtion to fetch from subgraph the list of names
-const getAddressEnsNames = async (address) => {
-  const response = await window.fetch(
-    'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        query: `
-        {
-          accounts(where: { id:"${address}" }) {
-            id
-            registrations {
-                domain {
-                    id
-                    name
-                    resolvedAddress {
-                        id
-                    }
-                    resolver {
-                        address
-                    }
-                }
-                registrationDate
-                expiryDate
-            }
-          }
-          domains(where: {resolvedAddress: "${address}"}) {
-              id
-              labelhash
-              name
-          }
-        }`,
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    },
-  );
-  return response.json();
-};
-
 const EnsNames = () => {
+  const dispatch = useDispatch();
   const history = useHistory();
-  const [ensNames, setEnsNames] = useState([]);
+  const ensNames = useSelector(getEnsDomainsByAddress);
   const [copied, setCopied] = useState(false);
   const identity = useSelector(getSelectedIdentity);
   const checksummedAddress = toChecksumHexAddress(identity.address);
@@ -69,29 +32,8 @@ const EnsNames = () => {
   };
 
   useEffect(() => {
-    const fetchWrapper = async () => {
-      // code to run on component mount
-      const names = await getAddressEnsNames(identity.address);
-      const consolidatedNames = names.data.domains.map((domain) => {
-        const registration = names.data.accounts[0].registrations.find(
-          (r) => r.domain.name === domain.name,
-        );
-        let dateString = '';
-        if (registration) {
-          const date = new Date();
-          date.setTime(registration.expiryDate * 1000);
-          dateString = date.toLocaleDateString();
-        }
-        return {
-          name: domain.name,
-          expiry: dateString,
-          url: `https://app.ens.domains/name/${domain.name}/details`,
-        };
-      });
-      setEnsNames(consolidatedNames);
-    };
-    fetchWrapper();
-  }, [identity.address]);
+    dispatch(fetchEnsDomainsByAddress(identity.address));
+  }, [dispatch, identity.address]);
 
   return (
     <div className="main-container">

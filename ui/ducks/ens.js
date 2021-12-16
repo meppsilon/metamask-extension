@@ -37,6 +37,9 @@ const initialState = {
   error: null,
   warning: null,
   network: null,
+  domainsByAddressLoading: false,
+  domainsByAddress: [],
+  domainsByAddressError: null,
   domainsLoading: false,
   domains: [],
   domainsError: null,
@@ -111,6 +114,20 @@ const slice = createSlice({
       state.warning = null;
       state.error = null;
     },
+    fetchEnsDomainsByAddressLoading: (state) => {
+      state.domainsByAddressLoading = true;
+      state.domainsByAddressError = false;
+    },
+    fetchEnsDomainsByAddressSuccess: (state, action) => {
+      state.domainsByAddressLoading = false;
+      state.domainsByAddressError = null;
+      state.domainsByAddress = action.payload;
+    },
+    fetchEnsDomainsByAddressError: (state, action) => {
+      state.domainsByAddressLoading = false;
+      state.domainsByAddressError = action.payload;
+      state.domainsByAddress = [];
+    },
     fetchEnsDomainsLoading: (state) => {
       state.domainsLoading = true;
       state.domainsError = false;
@@ -151,6 +168,9 @@ const {
   enableEnsLookup,
   ensNotSupported,
   resetEnsResolution,
+  fetchEnsDomainsByAddressLoading,
+  fetchEnsDomainsByAddressSuccess,
+  fetchEnsDomainsByAddressError,
   fetchEnsDomainsLoading,
   fetchEnsDomainsSuccess,
   fetchEnsDomainsError,
@@ -266,6 +286,69 @@ export function fetchEnsDomains(ensInput) {
   };
 }
 
+export function fetchEnsDomainsByAddress(address) {
+  return async (dispatch) => {
+    dispatch(fetchEnsDomainsByAddressLoading(address));
+    try {
+      const response = await window.fetch(
+        'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            query: `
+          {
+            accounts(where: { id:"${address}" }) {
+              id
+              registrations {
+                  domain {
+                      id
+                      name
+                      resolvedAddress {
+                          id
+                      }
+                      resolver {
+                          address
+                      }
+                  }
+                  registrationDate
+                  expiryDate
+              }
+            }
+            domains(where: {resolvedAddress: "${address}"}) {
+                id
+                labelhash
+                name
+            }
+          }`,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+      const json = await response.json();
+      const consolidatedNames = json.data.domains.map((domain) => {
+        const registration = json.data.accounts[0].registrations.find(
+          (r) => r.domain.name === domain.name,
+        );
+        let dateString = '';
+        if (registration) {
+          const date = new Date();
+          date.setTime(registration.expiryDate * 1000);
+          dateString = date.toLocaleDateString();
+        }
+        return {
+          name: domain.name,
+          expiry: dateString,
+          url: `https://app.ens.domains/name/${domain.name}/details`,
+        };
+      });
+      dispatch(fetchEnsDomainsByAddressSuccess(consolidatedNames));
+    } catch (e) {
+      console.error('ens domains error', e);
+      dispatch(fetchEnsDomainsByAddressError(e.message));
+    }
+  };
+}
+
 export function getEnsResolution(state) {
   return state[name].resolution;
 }
@@ -280,4 +363,7 @@ export function getEnsWarning(state) {
 
 export function getEnsDomains(state) {
   return state[name].domains;
+}
+export function getEnsDomainsByAddress(state) {
+  return state[name].domainsByAddress;
 }
