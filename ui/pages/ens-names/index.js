@@ -13,6 +13,45 @@ import { useI18nContext } from '../../hooks/useI18nContext';
 import ListItem from '../../components/ui/list-item';
 // import classnames from 'classnames';
 
+// funtion to fetch from subgraph the list of names
+const getAddressEnsNames = async (address) => {
+  const response = await window.fetch(
+    'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        query: `
+        {
+          accounts(where: { id:"${address}" }) {
+            id
+            registrations {
+                domain {
+                    id
+                    name
+                    resolvedAddress {
+                        id
+                    }
+                    resolver {
+                        address
+                    }
+                }
+                registrationDate
+                expiryDate
+            }
+          }
+          domains(where: {resolvedAddress: "${address}"}) {
+              id
+              labelhash
+              name
+          }
+        }`,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
+  return response.json();
+};
+
 const EnsNames = () => {
   const [ensNames, setEnsNames] = useState([]);
   const [copied, setCopied] = useState(false);
@@ -24,49 +63,10 @@ const EnsNames = () => {
     window.open(url);
   };
 
-  // funtion to fetch from subgraph the list of names
-  const getAddressEnsNames = async () => {
-    const response = await window.fetch(
-      'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
-      {
-        method: 'POST',
-        body: JSON.stringify({
-          query: `
-          {
-            accounts(where: { id:"${identity.address}" }) {
-              id
-              registrations {
-                  domain {
-                      id
-                      name
-                      resolvedAddress {
-                          id
-                      }
-                      resolver {
-                          address
-                      }
-                  }
-                  registrationDate
-                  expiryDate
-              }
-            }
-            domains(where: {resolvedAddress: "${identity.address}"}) {
-                id
-                labelhash
-                name
-            }
-          }`,
-        }),
-        headers: { 'Content-Type': 'application/json' },
-      },
-    );
-    return response.json();
-  };
-
   useEffect(() => {
     const fetchWrapper = async () => {
       // code to run on component mount
-      const names = await getAddressEnsNames();
+      const names = await getAddressEnsNames(identity.address);
       const consolidatedNames = names.data.domains.map((domain) => {
         const registration = names.data.accounts[0].registrations.find(
           (r) => r.domain.name === domain.name,
@@ -80,13 +80,16 @@ const EnsNames = () => {
       setEnsNames(consolidatedNames);
     };
     fetchWrapper();
-  }, []);
+  }, [identity.address]);
 
   return (
     <div className="main-container">
       <div className="home__container">
         <div className="home__main-view">
-          <div className="home__balance-wrapper">
+          <div
+            className="home__balance-wrapper"
+            style={{ marginBottom: '36px' }}
+          >
             <div
               style={{
                 fontFamily: 'Roboto',
