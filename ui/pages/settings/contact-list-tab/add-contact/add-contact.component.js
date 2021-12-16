@@ -28,6 +28,7 @@ export default class AddContact extends PureComponent {
     ensResolution: PropTypes.string,
     ensError: PropTypes.string,
     resetEnsResolution: PropTypes.func,
+    resetEnsDomains: PropTypes.func,
   };
 
   state = {
@@ -89,6 +90,7 @@ export default class AddContact extends PureComponent {
         }}
         onReset={() => {
           this.props.resetEnsResolution();
+          this.props.resetEnsDomains();
           this.setState({ ethAddress: '', input: '' });
         }}
         userInput={this.state.input}
@@ -98,7 +100,13 @@ export default class AddContact extends PureComponent {
 
   render() {
     const { t } = this.context;
-    const { history, addToAddressBook, ensError, ensResolution } = this.props;
+    const {
+      history,
+      addToAddressBook,
+      ensError,
+      ensResolution,
+      resetEnsDomains,
+    } = this.props;
 
     const errorToRender = ensError || this.state.error;
 
@@ -151,6 +159,7 @@ export default class AddContact extends PureComponent {
           }}
           onCancel={() => {
             history.push(CONTACT_LIST_ROUTE);
+            resetEnsDomains();
           }}
           submitText={this.context.t('save')}
         />

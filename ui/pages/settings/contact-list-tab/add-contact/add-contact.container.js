@@ -11,6 +11,7 @@ import {
   getEnsError,
   getEnsResolution,
   resetEnsResolution,
+  resetEnsDomains,
 } from '../../../../ducks/ens';
 import AddContact from './add-contact.component';
 
@@ -29,6 +30,7 @@ const mapDispatchToProps = (dispatch) => {
     scanQrCode: () => dispatch(showQrScanner()),
     qrCodeDetected: (data) => dispatch(qrCodeDetected(data)),
     resetEnsResolution: () => dispatch(resetEnsResolution()),
+    resetEnsDomains: () => dispatch(resetEnsDomains()),
   };
 };
 

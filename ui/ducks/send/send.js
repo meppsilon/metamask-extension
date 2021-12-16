@@ -81,7 +81,7 @@ import {
   getUnapprovedTxs,
 } from '../metamask/metamask';
 
-import { resetEnsResolution } from '../ens';
+import { resetEnsResolution, resetEnsDomains } from '../ens';
 import {
   isBurnAddress,
   isValidHexAddress,
@@ -1463,9 +1463,11 @@ export function updateRecipient({ address, nickname }) {
  */
 export function resetRecipientInput() {
   return async (dispatch) => {
+    console.log('reset recipient input');
     await dispatch(updateRecipientUserInput(''));
     await dispatch(updateRecipient({ address: '', nickname: '' }));
     await dispatch(resetEnsResolution());
+    await dispatch(resetEnsDomains());
     await dispatch(validateRecipientUserInput());
   };
 }

@@ -117,13 +117,19 @@ const slice = createSlice({
     },
     fetchEnsDomainsSuccess: (state, action) => {
       state.domainsLoading = false;
-      state.domainsError = false;
+      state.domainsError = null;
       state.domains = action.payload;
     },
     fetchEnsDomainsError: (state, action) => {
       state.domainsLoading = false;
       state.domainsError = action.payload;
       state.domains = [];
+    },
+    resetEnsDomains: (state) => {
+      console.log('reset ens domains');
+      state.domains = [];
+      state.domainsLoading = false;
+      state.domainsError = null;
     },
   },
   extraReducers: (builder) => {
@@ -145,11 +151,12 @@ const {
   enableEnsLookup,
   ensNotSupported,
   resetEnsResolution,
-  // fetchEnsDomainsLoading,
-  // fetchEnsDomainsSuccess,
-  // fetchEnsDomainsError,
+  fetchEnsDomainsLoading,
+  fetchEnsDomainsSuccess,
+  fetchEnsDomainsError,
+  resetEnsDomains,
 } = actions;
-export { resetEnsResolution };
+export { resetEnsResolution, resetEnsDomains };
 
 export function initializeEnsSlice() {
   return (dispatch, getState) => {
@@ -208,20 +215,56 @@ export function lookupEnsName(ensName) {
   };
 }
 
-// export function fetchEnsDomains(address) {
-//   return async (dispatch) => {
-//     dispatch(fetchEnsDomainsLoading());
-//     try {
-//       const response = await fetchWithCache(
-//         'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
-//       );
-//       console.log('response', response);
-//     } catch (e) {
-//       console.error('ens domains error', e);
-//       dispatch(fetchEnsDomainsError(e.message));
-//     }
-//   };
-// }
+const silentFailureEnsLookup = async (domain) => {
+  let address;
+  try {
+    address = await ens.lookup(domain.name);
+  } catch (e) {
+    return undefined;
+  }
+  return { name: domain.name, address };
+};
+
+export function fetchEnsDomains(ensInput) {
+  return async (dispatch) => {
+    dispatch(fetchEnsDomainsLoading());
+    try {
+      const response = await window.fetch(
+        'https://api.thegraph.com/subgraphs/name/ensdomains/ens',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            query: `
+            {
+              domains(where: { name_starts_with: "${ensInput}" }) {
+                name
+                resolvedAddress {
+                  id
+                }
+              }
+            }`,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+      const json = await response.json();
+      const { domains } = json.data;
+      const filteredDomains = domains.filter(
+        (domain) => domain.resolvedAddress,
+      );
+      const resolvedDomains = await Promise.all(
+        filteredDomains.map(silentFailureEnsLookup),
+      );
+      const filteredResolvedDomains = resolvedDomains.filter((domain) =>
+        Boolean(domain),
+      );
+      dispatch(fetchEnsDomainsSuccess(filteredResolvedDomains));
+    } catch (e) {
+      console.error('ens domains error', e);
+      dispatch(fetchEnsDomainsError(e.message));
+    }
+  };
+}
 
 export function getEnsResolution(state) {
   return state[name].resolution;
@@ -233,4 +276,8 @@ export function getEnsError(state) {
 
 export function getEnsWarning(state) {
   return state[name].warning;
+}
+
+export function getEnsDomains(state) {
+  return state[name].domains;
 }

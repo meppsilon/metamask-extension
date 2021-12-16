@@ -16,6 +16,7 @@ export default class AddRecipient extends Component {
     addressBook: PropTypes.array,
     updateRecipient: PropTypes.func,
     ensResolution: PropTypes.string,
+    ensDomains: PropTypes.array,
     ensError: PropTypes.string,
     ensWarning: PropTypes.string,
     addressBookEntryName: PropTypes.string,
@@ -95,6 +96,7 @@ export default class AddRecipient extends Component {
 
   render() {
     const {
+      ensDomains,
       ensResolution,
       recipient,
       userInput,
@@ -113,6 +115,10 @@ export default class AddRecipient extends Component {
       content = this.renderExplicitAddress(
         ensResolution,
         addressBookEntryName || userInput,
+      );
+    } else if (ensDomains.length > 0) {
+      content = ensDomains.map((domain) =>
+        this.renderExplicitAddress(domain.address, domain.name),
       );
     } else if (isUsingMyAccountsForRecipientSearch) {
       content = this.renderTransfer();

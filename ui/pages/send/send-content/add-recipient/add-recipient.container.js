@@ -18,6 +18,7 @@ import {
   getEnsResolution,
   getEnsError,
   getEnsWarning,
+  getEnsDomains,
 } from '../../../../ducks/ens';
 import AddRecipient from './add-recipient.component';
 
@@ -25,6 +26,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(AddRecipient);
 
 function mapStateToProps(state) {
   const ensResolution = getEnsResolution(state);
+  const ensDomains = getEnsDomains(state);
 
   let addressBookEntryName = '';
   if (ensResolution) {
@@ -43,6 +45,7 @@ function mapStateToProps(state) {
     addressBookEntryName,
     contacts: addressBook.filter(({ name }) => Boolean(name)),
     ensResolution,
+    ensDomains,
     ensError: getEnsError(state),
     ensWarning: getEnsWarning(state),
     nonContacts: addressBook.filter(({ name }) => !name),
