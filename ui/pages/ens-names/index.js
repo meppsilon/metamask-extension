@@ -17,7 +17,7 @@ const EnsNames = () => {
   const [ensNames, setEnsNames] = useState([]);
   const [copied, setCopied] = useState(false);
   const identity = useSelector(getSelectedIdentity);
-  const checksummedAddress = toChecksumHexAddress(identity);
+  const checksummedAddress = toChecksumHexAddress(identity.address);
   const t = useI18nContext();
 
   const onClick = (url) => {
@@ -33,7 +33,7 @@ const EnsNames = () => {
         body: JSON.stringify({
           query: `
           {
-            accounts(where: { id:"0x2388c11d0532ce92a99d16d1980cc5980cf575c3" }) {
+            accounts(where: { id:"${identity.address}" }) {
               id
               registrations {
                   domain {
@@ -50,7 +50,7 @@ const EnsNames = () => {
                   expiryDate
               }
             }
-            domains(where: {resolvedAddress: "0x2388c11d0532ce92a99d16d1980cc5980cf575c3"}) {
+            domains(where: {resolvedAddress: "${identity.address}"}) {
                 id
                 labelhash
                 name
