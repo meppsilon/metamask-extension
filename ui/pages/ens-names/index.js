@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import copyToClipboard from 'copy-to-clipboard';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { shortenAddress } from '../../helpers/utils/util';
 import { getSelectedIdentity } from '../../selectors';
 import CopyIcon from '../../components/ui/icon/copy-icon.component';
@@ -12,6 +13,8 @@ import { useI18nContext } from '../../hooks/useI18nContext';
 // import { EthOverview } from '../../components/app/wallet-overview';
 import ListItem from '../../components/ui/list-item';
 // import classnames from 'classnames';
+import AssetNavigation from '../asset/components/asset-navigation';
+import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 
 // funtion to fetch from subgraph the list of names
 const getAddressEnsNames = async (address) => {
@@ -53,11 +56,13 @@ const getAddressEnsNames = async (address) => {
 };
 
 const EnsNames = () => {
+  const history = useHistory();
   const [ensNames, setEnsNames] = useState([]);
   const [copied, setCopied] = useState(false);
   const identity = useSelector(getSelectedIdentity);
   const checksummedAddress = toChecksumHexAddress(identity.address);
   const t = useI18nContext();
+  const selectedAccountName = identity.ens || identity.name;
 
   const onClick = (url) => {
     window.open(url);
@@ -96,18 +101,12 @@ const EnsNames = () => {
             className="home__balance-wrapper"
             style={{ marginBottom: '36px' }}
           >
-            <div
-              style={{
-                fontFamily: 'Roboto',
-                fontWeight: 700,
-                fontSize: '14px',
-                padding: '20px 40px',
-                color: '#24292E',
-                width: '100%',
-              }}
-            >
-              My ENS
-            </div>
+            <AssetNavigation
+              accountName={selectedAccountName}
+              assetName="My ENS"
+              onBack={() => history.push(DEFAULT_ROUTE)}
+              style={{ width: '100%' }}
+            />
             <div
               style={{
                 fontFamily: 'Roboto',

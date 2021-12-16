@@ -23,7 +23,7 @@ export default function TokenAsset({ token }) {
   const chainId = useSelector(getCurrentChainId);
   const rpcPrefs = useSelector(getRpcPrefsForCurrentProvider);
   const selectedIdentity = useSelector(getSelectedIdentity);
-  const selectedAccountName = selectedIdentity.name;
+  const selectedAccountName = selectedIdentity.ens || selectedIdentity.name;
   const selectedAddress = selectedIdentity.address;
   const history = useHistory();
   const tokenTrackerLink = getTokenTrackerLink(

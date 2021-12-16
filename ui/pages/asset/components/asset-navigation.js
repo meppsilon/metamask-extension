@@ -3,9 +3,15 @@ import PropTypes from 'prop-types';
 
 import AssetBreadcrumb from './asset-breadcrumb';
 
-const AssetNavigation = ({ accountName, assetName, onBack, optionsButton }) => {
+const AssetNavigation = ({
+  accountName,
+  assetName,
+  onBack,
+  optionsButton,
+  style,
+}) => {
   return (
-    <div className="asset-navigation">
+    <div className="asset-navigation" style={style}>
       <AssetBreadcrumb
         accountName={accountName}
         assetName={assetName}
@@ -21,10 +27,12 @@ AssetNavigation.propTypes = {
   assetName: PropTypes.string.isRequired,
   onBack: PropTypes.func.isRequired,
   optionsButton: PropTypes.element,
+  style: PropTypes.object,
 };
 
 AssetNavigation.defaultProps = {
   optionsButton: undefined,
+  style: undefined,
 };
 
 export default AssetNavigation;
