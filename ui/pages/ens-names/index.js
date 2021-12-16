@@ -71,9 +71,15 @@ const EnsNames = () => {
         const registration = names.data.accounts[0].registrations.find(
           (r) => r.domain.name === domain.name,
         );
+        let dateString = '';
+        if (registration) {
+          const date = new Date();
+          date.setTime(registration.expiryDate * 1000);
+          dateString = date.toLocaleDateString();
+        }
         return {
           name: domain.name,
-          expiry: registration?.expiryDate,
+          expiry: dateString,
           url: `https://app.ens.domains/name/${domain.name}/details`,
         };
       });
@@ -145,8 +151,11 @@ const EnsNames = () => {
                     <span className="asset-list-item__token-value">
                       {nameObj.name}
                     </span>
-                    <span className="asset-list-item__token-symbol">
-                      {nameObj.expiry || 'Not Found'}
+                    <span
+                      className="asset-list-item__token-symbol"
+                      style={{ paddingLeft: '12px' }}
+                    >
+                      {nameObj.expiry && `Expires: ${nameObj.expiry}`}
                     </span>
                   </h2>
                 </div>
