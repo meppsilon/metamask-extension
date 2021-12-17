@@ -21,7 +21,6 @@ import {
 import TextField from '../../ui/text-field';
 import SearchIcon from '../../ui/search-icon';
 import Button from '../../ui/button';
-
 import { isBeta } from '../../../helpers/utils/build-types';
 
 export function AccountMenuItem(props) {

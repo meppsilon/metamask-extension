@@ -19,6 +19,7 @@ import {
   hasUnsignedQRHardwareTransaction,
   hasUnsignedQRHardwareMessage,
   getNewCollectibleAddedMessage,
+  getSelectedIdentity,
 } from '../../selectors';
 
 import {
@@ -35,6 +36,7 @@ import {
   setNewNetworkAdded,
   setNewCollectibleAddedMessage,
 } from '../../store/actions';
+import { fetchEnsDomainsByAddress } from '../../ducks/ens';
 import { setThreeBoxLastUpdated, hideWhatsNewPopup } from '../../ducks/app/app';
 import { getWeb3ShimUsageAlertEnabledness } from '../../ducks/metamask/metamask';
 import { getSwapsFeatureIsLive } from '../../ducks/swaps/swaps';
@@ -85,7 +87,7 @@ const mapStateToProps = (state) => {
     getWeb3ShimUsageAlertEnabledness(state) &&
     activeTabHasPermissions(state) &&
     getWeb3ShimUsageStateForOrigin(state, originOfCurrentTab) ===
-      WEB3_SHIM_USAGE_ALERT_STATES.RECORDED;
+    WEB3_SHIM_USAGE_ALERT_STATES.RECORDED;
 
   const isSigningQRHardwareTransaction =
     hasUnsignedQRHardwareTransaction(state) ||
@@ -125,6 +127,7 @@ const mapStateToProps = (state) => {
     newNetworkAdded: getNewNetworkAdded(state),
     isSigningQRHardwareTransaction,
     newCollectibleAddedMessage: getNewCollectibleAddedMessage(state),
+    selectedIdentity: getSelectedIdentity(state),
   };
 };
 
@@ -159,6 +162,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setNewCollectibleAddedMessage: (message) => {
     dispatch(setNewCollectibleAddedMessage(message));
+  },
+  fetchEnsDomainsByAddress: (address) => {
+    dispatch(fetchEnsDomainsByAddress(address));
   },
 });
 

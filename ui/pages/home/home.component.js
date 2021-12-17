@@ -94,6 +94,8 @@ export default class Home extends PureComponent {
     isSigningQRHardwareTransaction: PropTypes.bool.isRequired,
     newCollectibleAddedMessage: PropTypes.string,
     setNewCollectibleAddedMessage: PropTypes.func.isRequired,
+    fetchEnsDomainsByAddress: PropTypes.func.isRequired,
+    selectedIdentity: PropTypes.object,
   };
 
   state = {
@@ -143,6 +145,8 @@ export default class Home extends PureComponent {
     // eslint-disable-next-line react/no-unused-state
     this.setState({ mounted: true });
     this.checkStatusAndNavigate();
+    const identity = this.props.selectedIdentity;
+    this.props.fetchEnsDomainsByAddress(identity.address);
   }
 
   static getDerivedStateFromProps(
@@ -251,8 +255,8 @@ export default class Home extends PureComponent {
                   {newCollectibleAddedMessage === 'success'
                     ? t('newCollectibleAddedMessage')
                     : t('newCollectibleAddFailed', [
-                        newCollectibleAddedMessage,
-                      ])}
+                      newCollectibleAddedMessage,
+                    ])}
                 </Typography>
                 <button
                   className="fas fa-times home__close"
