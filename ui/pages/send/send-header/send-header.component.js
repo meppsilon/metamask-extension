@@ -11,6 +11,7 @@ import {
   resetSendState,
   SEND_STAGES,
 } from '../../../ducks/send';
+import { resetEnsDomains } from '../../../ducks/ens';
 
 export default function SendHeader() {
   const history = useHistory();
@@ -22,6 +23,7 @@ export default function SendHeader() {
 
   const onClose = () => {
     dispatch(resetSendState());
+    dispatch(resetEnsDomains());
     history.push(mostRecentOverviewPage);
   };
 

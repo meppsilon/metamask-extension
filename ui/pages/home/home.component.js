@@ -255,8 +255,8 @@ export default class Home extends PureComponent {
                   {newCollectibleAddedMessage === 'success'
                     ? t('newCollectibleAddedMessage')
                     : t('newCollectibleAddFailed', [
-                      newCollectibleAddedMessage,
-                    ])}
+                        newCollectibleAddedMessage,
+                      ])}
                 </Typography>
                 <button
                   className="fas fa-times home__close"

@@ -11,7 +11,6 @@ import {
   isBurnAddress,
   isValidHexAddress,
 } from '../../../../../shared/modules/hexstring-utils';
-import { INVALID_RECIPIENT_ADDRESS_ERROR } from '../../../send/send.constants';
 
 export default class AddContact extends PureComponent {
   static contextTypes = {
@@ -67,8 +66,6 @@ export default class AddContact extends PureComponent {
 
     if (valid || validEnsAddress || address === '') {
       this.setState({ error: '', ethAddress: address });
-    } else {
-      this.setState({ error: INVALID_RECIPIENT_ADDRESS_ERROR });
     }
   };
 

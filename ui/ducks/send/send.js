@@ -15,7 +15,7 @@ import {
   INSUFFICIENT_FUNDS_ERROR,
   INSUFFICIENT_TOKENS_ERROR,
   INVALID_RECIPIENT_ADDRESS_ERROR,
-  INVALID_RECIPIENT_ADDRESS_NOT_ETH_NETWORK_ERROR,
+  // INVALID_RECIPIENT_ADDRESS_NOT_ETH_NETWORK_ERROR,
   KNOWN_RECIPIENT_ADDRESS_WARNING,
   MIN_GAS_LIMIT_HEX,
   NEGATIVE_ETH_ERROR,
@@ -70,7 +70,7 @@ import {
 } from '../../helpers/utils/token-util';
 import {
   checkExistingAddresses,
-  isDefaultMetaMaskChain,
+  // isDefaultMetaMaskChain,
   isOriginContractAddress,
   isValidDomainName,
   isEqualCaseInsensitive,
@@ -991,7 +991,7 @@ const slice = createSlice({
         recipient.warning = null;
       } else {
         const isSendingToken = asset.type === ASSET_TYPES.TOKEN;
-        const { chainId, tokens, tokenAddressList } = action.payload;
+        const { tokens, tokenAddressList } = action.payload;
         if (
           isBurnAddress(recipient.userInput) ||
           (!isValidHexAddress(recipient.userInput, {
@@ -999,9 +999,9 @@ const slice = createSlice({
           }) &&
             !isValidDomainName(recipient.userInput))
         ) {
-          recipient.error = isDefaultMetaMaskChain(chainId)
-            ? INVALID_RECIPIENT_ADDRESS_ERROR
-            : INVALID_RECIPIENT_ADDRESS_NOT_ETH_NETWORK_ERROR;
+          // recipient.error = isDefaultMetaMaskChain(chainId)
+          //   ? INVALID_RECIPIENT_ADDRESS_ERROR
+          //   : INVALID_RECIPIENT_ADDRESS_NOT_ETH_NETWORK_ERROR;
         } else if (
           isSendingToken &&
           isOriginContractAddress(recipient.userInput, asset.details.address)

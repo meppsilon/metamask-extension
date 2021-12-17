@@ -87,7 +87,7 @@ const mapStateToProps = (state) => {
     getWeb3ShimUsageAlertEnabledness(state) &&
     activeTabHasPermissions(state) &&
     getWeb3ShimUsageStateForOrigin(state, originOfCurrentTab) ===
-    WEB3_SHIM_USAGE_ALERT_STATES.RECORDED;
+      WEB3_SHIM_USAGE_ALERT_STATES.RECORDED;
 
   const isSigningQRHardwareTransaction =
     hasUnsignedQRHardwareTransaction(state) ||

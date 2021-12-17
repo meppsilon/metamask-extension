@@ -269,15 +269,19 @@ export function fetchEnsDomains(ensInput) {
       );
       const json = await response.json();
       const { domains } = json.data;
+      console.log(`domains`, domains);
       const filteredDomains = domains.filter(
         (domain) => domain.resolvedAddress,
       );
+      console.log(`filteredDomains`, filteredDomains);
       const resolvedDomains = await Promise.all(
         filteredDomains.map(silentFailureEnsLookup),
       );
+      console.log(`resolvedDomains`, resolvedDomains);
       const filteredResolvedDomains = resolvedDomains.filter((domain) =>
         Boolean(domain),
       );
+      console.log(`filteredResolvedDomains`, filteredResolvedDomains);
       dispatch(fetchEnsDomainsSuccess(filteredResolvedDomains));
     } catch (e) {
       console.error('ens domains error', e);
