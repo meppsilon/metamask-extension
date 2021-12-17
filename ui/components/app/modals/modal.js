@@ -30,6 +30,7 @@ import AddToAddressBookModal from './add-to-addressbook-modal';
 import EditApprovalPermission from './edit-approval-permission';
 import NewAccountModal from './new-account-modal';
 import CustomizeNonceModal from './customize-nonce';
+import EnsExpirationModal from './ens-expiration';
 
 const modalContainerBaseStyle = {
   transform: 'translate3d(-50%, 0, 0px)',
@@ -169,6 +170,11 @@ const MODALS = {
 
   ACCOUNT_DETAILS: {
     contents: <AccountDetailsModal />,
+    ...accountModalStyle,
+  },
+
+  ENS_EXPIRATION: {
+    contents: <EnsExpirationModal />,
     ...accountModalStyle,
   },
 

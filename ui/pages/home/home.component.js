@@ -96,6 +96,10 @@ export default class Home extends PureComponent {
     setNewCollectibleAddedMessage: PropTypes.func.isRequired,
     fetchEnsDomainsByAddress: PropTypes.func.isRequired,
     selectedIdentity: PropTypes.object,
+    showModal: PropTypes.func.isRequired,
+    ensDomainsByAddress: PropTypes.array,
+    isModalOpen: PropTypes.bool,
+    warningClosed: PropTypes.object,
   };
 
   state = {
@@ -190,6 +194,9 @@ export default class Home extends PureComponent {
       threeBoxLastUpdated,
       threeBoxSynced,
       isNotification,
+      ensDomainsByAddress,
+      isModalOpen,
+      warningClosed,
     } = this.props;
 
     if (!prevState.closing && this.state.closing) {
@@ -200,6 +207,14 @@ export default class Home extends PureComponent {
 
     if (threeBoxSynced && showRestorePrompt && threeBoxLastUpdated === null) {
       setupThreeBox();
+    }
+    const warningEns = ensDomainsByAddress[0];
+
+    if (!isModalOpen && warningEns && !warningClosed[warningEns.name]) {
+      this.props.showModal({
+        name: 'ENS_EXPIRATION',
+        ensDomain: warningEns,
+      });
     }
   }
 

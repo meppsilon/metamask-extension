@@ -82,8 +82,8 @@ export default class AccountDetailsModal extends Component {
         >
           {rpcPrefs.blockExplorerUrl
             ? this.context.t('blockExplorerView', [
-              getURLHostName(rpcPrefs.blockExplorerUrl),
-            ])
+                getURLHostName(rpcPrefs.blockExplorerUrl),
+              ])
             : this.context.t('etherscanViewOn')}
         </Button>
 

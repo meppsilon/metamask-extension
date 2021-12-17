@@ -43,6 +43,7 @@ const initialState = {
   domainsLoading: false,
   domains: [],
   domainsError: null,
+  warningClosed: {},
 };
 
 export const ensInitialState = initialState;
@@ -148,6 +149,9 @@ const slice = createSlice({
       state.domainsLoading = false;
       state.domainsError = null;
     },
+    closeWarning: (state, action) => {
+      state.warningClosed[action.payload] = true;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(CHAIN_CHANGED, (state, action) => {
@@ -175,8 +179,9 @@ const {
   fetchEnsDomainsSuccess,
   fetchEnsDomainsError,
   resetEnsDomains,
+  closeWarning,
 } = actions;
-export { resetEnsResolution, resetEnsDomains };
+export { resetEnsResolution, resetEnsDomains, closeWarning };
 
 export function initializeEnsSlice() {
   return (dispatch, getState) => {
@@ -333,15 +338,10 @@ export function fetchEnsDomainsByAddress(address) {
         const registration = json.data.accounts[0].registrations.find(
           (r) => r.domain.name === domain.name,
         );
-        let dateString = '';
-        if (registration) {
-          const date = new Date();
-          date.setTime(registration.expiryDate * 1000);
-          dateString = date.toLocaleDateString();
-        }
         return {
           name: domain.name,
-          expiry: dateString,
+          expiry:
+            registration.expiryDate && new Date(registration.expiryDate * 1000),
           url: `https://app.ens.domains/name/${domain.name}/details`,
         };
       });

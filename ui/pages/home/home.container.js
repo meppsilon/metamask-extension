@@ -35,8 +35,12 @@ import {
   setRecoveryPhraseReminderLastShown,
   setNewNetworkAdded,
   setNewCollectibleAddedMessage,
+  showModal,
 } from '../../store/actions';
-import { fetchEnsDomainsByAddress } from '../../ducks/ens';
+import {
+  fetchEnsDomainsByAddress,
+  getEnsDomainsByAddress,
+} from '../../ducks/ens';
 import { setThreeBoxLastUpdated, hideWhatsNewPopup } from '../../ducks/app/app';
 import { getWeb3ShimUsageAlertEnabledness } from '../../ducks/metamask/metamask';
 import { getSwapsFeatureIsLive } from '../../ducks/swaps/swaps';
@@ -128,6 +132,9 @@ const mapStateToProps = (state) => {
     isSigningQRHardwareTransaction,
     newCollectibleAddedMessage: getNewCollectibleAddedMessage(state),
     selectedIdentity: getSelectedIdentity(state),
+    ensDomainsByAddress: getEnsDomainsByAddress(state),
+    isModalOpen: state.appState.modal.open,
+    warningClosed: state.ENS.warningClosed,
   };
 };
 
@@ -165,6 +172,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   fetchEnsDomainsByAddress: (address) => {
     dispatch(fetchEnsDomainsByAddress(address));
+  },
+  showModal: (...args) => {
+    dispatch(showModal(...args));
   },
 });
 

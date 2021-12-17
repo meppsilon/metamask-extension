@@ -97,7 +97,8 @@ const EnsNames = () => {
                       color: nameObj.name === 'plumbus.eth' ? 'red' : '',
                     }}
                   >
-                    {nameObj.expiry && `Expires: ${nameObj.expiry}`}
+                    {nameObj.expiry &&
+                      `Expires: ${nameObj.expiry.toLocaleDateString()}`}
                   </div>
                 </div>
               }
