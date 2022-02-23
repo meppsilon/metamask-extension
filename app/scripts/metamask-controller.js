@@ -3106,6 +3106,7 @@ export default class MetamaskController extends EventEmitter {
    * @param {tabId} [options.tabId] - The tab ID of the sender - if the sender is within a tab
    */
   setupProviderEngine({ origin, subjectType, sender, tabId }) {
+    console.log('arguments', origin, subjectType, sender, tabId);
     // setup json rpc engine stack
     const engine = new JsonRpcEngine();
     const { blockTracker, provider } = this;
@@ -3168,6 +3169,10 @@ export default class MetamaskController extends EventEmitter {
         sendMetrics: this.metaMetricsController.trackEvent.bind(
           this.metaMetricsController,
         ),
+        getAddressBook: () => {
+          console.log('origin', origin);
+          return this.addressBookController.state.addressBook;
+        },
 
         // Permission-related
         getAccounts: this.getPermittedAccounts.bind(this, origin),
