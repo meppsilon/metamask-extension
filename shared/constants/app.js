@@ -41,6 +41,7 @@ export const MESSAGE_TYPE = {
   ETH_SIGN_TYPED_DATA: 'eth_signTypedData',
   GET_PROVIDER_STATE: 'metamask_getProviderState',
   GET_ADDRESS_BOOK: 'metamask_getAddressBook',
+  GET_SETTINGS: 'metamask_getSettings',
   LOG_WEB3_SHIM_USAGE: 'metamask_logWeb3ShimUsage',
   PERSONAL_SIGN: 'personal_sign',
   SEND_METADATA: 'metamask_sendDomainMetadata',

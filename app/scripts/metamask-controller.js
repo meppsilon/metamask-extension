@@ -3170,8 +3170,10 @@ export default class MetamaskController extends EventEmitter {
           this.metaMetricsController,
         ),
         getAddressBook: () => {
-          console.log('origin', origin);
           return this.addressBookController.state.addressBook;
+        },
+        getSettings: () => {
+          return this.preferencesController.store.getState();
         },
 
         // Permission-related

@@ -1,6 +1,7 @@
 import addEthereumChain from './add-ethereum-chain';
 import ethAccounts from './eth-accounts';
 import getAddressBook from './get-address-book';
+import getSettings from './get-settings';
 import getProviderState from './get-provider-state';
 import logWeb3ShimUsage from './log-web3-shim-usage';
 import requestAccounts from './request-accounts';
@@ -12,6 +13,7 @@ const handlers = [
   addEthereumChain,
   ethAccounts,
   getAddressBook,
+  getSettings,
   getProviderState,
   logWeb3ShimUsage,
   requestAccounts,
